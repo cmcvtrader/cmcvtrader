@@ -1483,6 +1483,47 @@
             </div>
         </div>
     </footer>
+    <!-- ══ CRM LEADS PANEL ═══════════════════════════════════════════════════ -->
+    <div id="crm-overlay">
+        <div id="crm-panel">
+            <div id="crm-bar">
+                <h2>Panel <em>Leads</em></h2>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <span id="crm-refresh-btn" title="Actualizar" style="cursor:pointer;font-size:1.1rem;opacity:0.5;transition:opacity 0.2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.5" onclick="CRM.cargar()">🔄</span>
+                    <button id="crm-close" onclick="CRM.cerrar()">✕</button>
+                </div>
+            </div>
+            <!-- Login screen -->
+            <div id="crm-login">
+                <h3>Acceso Privado</h3>
+                <p>Usa tu email y contraseña de Supabase.</p>
+                <input id="crm-email-input" type="email" placeholder="tu@email.com" style="width:100%;max-width:320px;padding:13px 16px;border:1px solid var(--concrete);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.98rem;color:var(--ink);outline:none;background:#fff;margin-bottom:0;" onkeydown="if(event.key==='Enter') document.getElementById('crm-pwd-input').focus()">
+                <input id="crm-pwd-input" type="password" placeholder="Contraseña…" onkeydown="if(event.key==='Enter') CRM.login()">
+                <button id="crm-pwd-btn" onclick="CRM.login()">Entrar →</button>
+                <span id="crm-pwd-err">Email o contraseña incorrectos</span>
+            </div>
+            <!-- Data screen (hidden until login) -->
+            <div id="crm-data" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+                <div id="crm-stats"></div>
+                <div id="crm-body">
+                    <table id="crm-table">
+                        <thead>
+                            <tr>
+                                <th>Contacto</th>
+                                <th>Email</th>
+                                <th>Reto</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crm-tbody"></tbody>
+                    </table>
+                    <p id="crm-empty" class="crm-empty" style="display:none;">Sin leads todavía. Cuando alguien rellene el formulario aparecerá aquí.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     
     <!-- Global: CRM + Supabase (no defer, must be globally accessible) -->
@@ -1513,12 +1554,21 @@
         };
 
         const CRM = {
-            abrir() {
+            async abrir() {
                 document.getElementById('crm-overlay').classList.add('open');
-                // Check if there's already an active session
-                getSupaClient().then(client => client.auth.getSession().then(({ data }) => {
-                    if (data.session) { this._showData(); this.cargar(); }
-                }));
+                try {
+                    const client = await getSupaClient();
+                    const { data } = await client.auth.getSession();
+                    if (data && data.session) {
+                        this._showData();
+                        this.cargar();
+                    } else {
+                        document.getElementById('crm-login').style.display = 'flex';
+                        document.getElementById('crm-data').style.display  = 'none';
+                    }
+                } catch(e) {
+                    document.getElementById('crm-login').style.display = 'flex';
+                }
             },
 
             cerrar() {
@@ -1760,37 +1810,7 @@
         });
     </script>
 
-
-    <!-- ══ CRM LEADS PANEL ═══════════════════════════════════════════════════ -->
-    <div id="crm-overlay">
-        <div id="crm-panel">
-            <div id="crm-bar">
-                <h2>Panel <em>Leads</em></h2>
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <span id="crm-refresh-btn" title="Actualizar" style="cursor:pointer;font-size:1.1rem;opacity:0.5;transition:opacity 0.2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.5" onclick="CRM.cargar()">🔄</span>
-                    <button id="crm-close" onclick="CRM.cerrar()">✕</button>
-                </div>
-            </div>
-            <!-- Login screen -->
-            <div id="crm-login">
-                <h3>Acceso Privado</h3>
-                <p>Usa tu email y contraseña de Supabase.</p>
-                <input id="crm-email-input" type="email" placeholder="tu@email.com" style="width:100%;max-width:320px;padding:13px 16px;border:1px solid var(--concrete);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.98rem;color:var(--ink);outline:none;background:#fff;margin-bottom:0;" onkeydown="if(event.key==='Enter') document.getElementById('crm-pwd-input').focus()">
-                <input id="crm-pwd-input" type="password" placeholder="Contraseña…" onkeydown="if(event.key==='Enter') CRM.login()">
-                <button id="crm-pwd-btn" onclick="CRM.login()">Entrar →</button>
-                <span id="crm-pwd-err">Email o contraseña incorrectos</span>
-            </div>
-            <!-- Data screen (hidden until login) -->
-            <div id="crm-data" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
-                <div id="crm-stats"></div>
-                <div id="crm-body">
-                    <table id="crm-table">
-                        <thead>
-                            <tr>
-                                <th>Contacto</th>
-                                <th>Email</th>
-                                <th>Reto</th>
-                                <th>Fecha</th>
+    <th>Fecha</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
