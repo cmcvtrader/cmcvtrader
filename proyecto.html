@@ -8,76 +8,119 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --white:    #fafaf9;
-            --concrete: #e7e5e4;
-            --mid:      #a8a29e;
-            --dark:     #292524;
-            --gold:     #f59e0b;
-            --gold-dim: rgba(245,158,11,0.12);
+            --white:      #fafaf9;
+            --concrete:   #e7e5e4;
+            --mid:        #a8a29e;
+            --dark:       #292524;
+            --gold:       #f59e0b;
+            --gold-dim:   rgba(245,158,11,0.10);
+            --gold-border:rgba(245,158,11,0.30);
+            --sage:       #84cc16;
+            --sage-dim:   rgba(132,204,22,0.10);
+            --olive:      #65a30d;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--dark); min-height: 100vh; }
 
+        /* ── PROGRESS ── */
         #progress-wrap { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--concrete); }
         #progress-bar-track { height: 3px; background: var(--concrete); }
-        #progress-bar-fill  { height: 3px; background: var(--gold); width: 0%; transition: width 0.3s ease; }
+        #progress-bar-fill  { height: 3px; background: linear-gradient(90deg, var(--gold), var(--sage)); width: 0%; transition: width 0.3s ease; }
         #progress-info { display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; font-size: 0.78rem; color: var(--mid); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
         #progress-label { color: var(--dark); font-weight: 500; }
-        #progress-pct   { color: var(--gold); }
+        #progress-pct   { color: var(--gold); font-weight: 600; }
 
+        /* ── LAYOUT ── */
         .page { max-width: 680px; margin: 0 auto; padding: 100px 24px 80px; }
 
-        .hero { margin-bottom: 64px; }
-        .hero-tag { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); background: var(--gold-dim); padding: 5px 12px; border-radius: 4px; margin-bottom: 20px; }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; color: var(--dark); margin-bottom: 16px; }
-        .hero p { color: var(--mid); font-size: 1rem; line-height: 1.7; max-width: 500px; }
+        /* ── HERO ── */
+        .hero { margin-bottom: 72px; }
+        .hero-tag { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); background: var(--gold-dim); border: 1px solid var(--gold-border); padding: 5px 12px; border-radius: 4px; margin-bottom: 24px; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.03em; color: var(--dark); margin-bottom: 20px; }
+        .hero h1 span { color: var(--gold); }
+        .hero p { color: var(--mid); font-size: 1rem; line-height: 1.75; max-width: 480px; }
+        .hero-divider { width: 40px; height: 3px; background: linear-gradient(90deg, var(--gold), var(--sage)); border-radius: 2px; margin: 24px 0; }
 
+        /* ── SECTIONS ── */
         .section { margin-bottom: 64px; }
-        .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--concrete); }
-        .section-num { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--gold); letter-spacing: 0.1em; }
-        .section-head h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+        .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--concrete); }
+        .section-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--white); background: var(--gold); padding: 3px 8px; border-radius: 4px; letter-spacing: 0.08em; font-weight: 500; }
+        .section-head h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; color: var(--dark); }
 
+        /* ── FIELDS ── */
         .field { margin-bottom: 28px; }
         .field label { display: block; font-size: 0.88rem; font-weight: 500; margin-bottom: 6px; color: var(--dark); }
         .field label .req { color: var(--gold); margin-left: 2px; }
-        .hint { font-size: 0.78rem; color: var(--mid); margin-bottom: 8px; line-height: 1.5; }
+        .hint { font-size: 0.78rem; color: var(--mid); margin-bottom: 10px; line-height: 1.6; padding-left: 10px; border-left: 2px solid var(--concrete); }
 
+        /* ── INPUTS ── */
         input[type="text"], input[type="email"], input[type="tel"], input[type="url"], select, textarea {
-            width: 100%; padding: 12px 14px; background: #fff; border: 1px solid var(--concrete); border-radius: 8px;
+            width: 100%; padding: 12px 14px; background: #fff;
+            border: 1px solid var(--concrete); border-radius: 8px;
             font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--dark);
             transition: border-color 0.2s, box-shadow 0.2s; appearance: none;
         }
         input::placeholder, textarea::placeholder { color: var(--mid); }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-dim); }
-        textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-dim);
+        }
+        textarea { resize: vertical; min-height: 96px; line-height: 1.65; }
 
+        /* ── SELECT ── */
         .select-wrap { position: relative; }
         .select-wrap::after { content: '↓'; font-size: 0.8rem; color: var(--mid); position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
         .select-wrap select { padding-right: 36px; cursor: pointer; }
 
+        /* ── GRID ── */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
+        /* ── CHOICES ── */
         .choices { display: flex; flex-direction: column; gap: 8px; }
-        .choice { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: #fff; border: 1px solid var(--concrete); border-radius: 8px; cursor: pointer; transition: border-color 0.2s, background 0.2s; font-size: 0.9rem; }
+        .choice { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #fff; border: 1px solid var(--concrete); border-radius: 8px; cursor: pointer; transition: all 0.18s; font-size: 0.9rem; color: var(--dark); }
         .choice:hover { border-color: var(--gold); background: var(--gold-dim); }
         .choice input[type="checkbox"], .choice input[type="radio"] { width: 16px; height: 16px; accent-color: var(--gold); cursor: pointer; flex-shrink: 0; }
+        .choice.active { border-color: var(--gold); background: var(--gold-dim); }
 
-        .sector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 4px; }
-        .sector-pill { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px; background: #fff; border: 1px solid var(--concrete); border-radius: 10px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: center; font-size: 0.82rem; font-weight: 500; color: var(--dark); }
-        .sector-pill .icon { font-size: 1.4rem; }
-        .sector-pill:hover { border-color: var(--gold); background: var(--gold-dim); }
+        /* ── SECTOR GRID ── */
+        .sector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 4px; }
+        .sector-pill { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 10px; background: #fff; border: 1px solid var(--concrete); border-radius: 10px; cursor: pointer; transition: all 0.18s; text-align: center; font-size: 0.82rem; font-weight: 500; color: var(--dark); }
+        .sector-pill .icon { font-size: 1.5rem; }
+        .sector-pill:hover { border-color: var(--gold); background: var(--gold-dim); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,158,11,0.12); }
         .sector-pill input { display: none; }
-        .sector-pill.selected { border-color: var(--gold); background: var(--gold-dim); }
+        .sector-pill.selected { border-color: var(--gold); background: var(--gold-dim); box-shadow: 0 0 0 2px var(--gold-border); }
 
-        .submit-section { padding-top: 16px; border-top: 1px solid var(--concrete); }
-        .submit-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px 24px; background: var(--dark); color: var(--white); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; letter-spacing: -0.01em; }
-        .submit-btn:hover { background: #000; transform: translateY(-1px); }
+        /* ── INFO CARD ── */
+        .info-card { background: var(--sage-dim); border: 1px solid rgba(132,204,22,0.25); border-radius: 10px; padding: 14px 16px; margin-bottom: 24px; display: flex; gap: 10px; align-items: flex-start; }
+        .info-card .ic-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+        .info-card p { font-size: 0.82rem; color: var(--olive); line-height: 1.6; font-weight: 500; }
+
+        /* ── SUBMIT ── */
+        .submit-section { padding-top: 20px; border-top: 2px solid var(--concrete); }
+        .submit-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 17px 24px; background: var(--dark); color: var(--white); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; letter-spacing: -0.01em; }
+        .submit-btn:hover { background: #000; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .submit-btn .arrow { display: inline-block; transition: transform 0.2s; }
-        .submit-btn:hover .arrow { transform: translateX(4px); }
-        .privacy-note { margin-top: 16px; text-align: center; font-size: 0.78rem; color: var(--mid); line-height: 1.6; }
+        .submit-btn:hover .arrow { transform: translateX(5px); }
+        .submit-btn .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); display: inline-block; }
 
-        @media (max-width: 540px) { .grid-2 { grid-template-columns: 1fr; } #progress-info { padding: 10px 20px; } }
+        /* ── FOOTER NOTE ── */
+        .privacy-note { margin-top: 18px; text-align: center; font-size: 0.78rem; color: var(--mid); line-height: 1.7; }
+        .privacy-note span { color: var(--sage); font-weight: 500; }
+
+        /* ── CHAR COUNTER ── */
+        .char-wrap { position: relative; }
+        .char-count { position: absolute; bottom: 8px; right: 12px; font-size: 0.72rem; color: var(--mid); font-family: 'DM Mono', monospace; pointer-events: none; }
+
+        /* ── STEP BADGE ── */
+        .step-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--sage); font-weight: 500; margin-top: 6px; }
+        .step-badge::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+
+        @media (max-width: 540px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            #progress-info { padding: 10px 20px; }
+            .sector-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+        }
     </style>
 </head>
 <body>
@@ -94,8 +137,9 @@
 
     <header class="hero">
         <div class="hero-tag">📋 Documento de descubrimiento</div>
-        <h1>Brief del<br>Proyecto Web</h1>
-        <p>Cuéntanos todo sobre tu negocio para que podamos crear una web que realmente te represente. Tiempo estimado: 15–20 min.</p>
+        <h1>Brief del<br><span>Proyecto Web</span></h1>
+        <div class="hero-divider"></div>
+        <p>Cuéntanos todo sobre tu negocio para que podamos crear una web que realmente te represente y convierta. Tiempo estimado: <strong>15–20 min</strong>.</p>
     </header>
 
     <form action="https://formspree.io/f/meelbbgr" method="POST">
@@ -103,7 +147,6 @@
         <!-- 01 -->
         <section class="section">
             <div class="section-head"><span class="section-num">01</span><h2>Información Básica</h2></div>
-
             <div class="field">
                 <label>Nombre de la empresa o marca <span class="req">*</span></label>
                 <input type="text" name="empresa_nombre" required placeholder="Ej: Studio Alma, Clínica Verde, Agencia Nómada...">
@@ -128,43 +171,45 @@
                     <input type="tel" name="contacto_telefono" required>
                 </div>
             </div>
-            <div class="field">
-                <label>Ciudad / País <span class="req">*</span></label>
-                <input type="text" name="empresa_ubicacion" required placeholder="Ej: Madrid, España">
-            </div>
-            <div class="field">
-                <label>Año de fundación</label>
-                <input type="text" name="empresa_fundacion" placeholder="Ej: 2018">
+            <div class="grid-2">
+                <div class="field">
+                    <label>Ciudad / País <span class="req">*</span></label>
+                    <input type="text" name="empresa_ubicacion" required placeholder="Ej: Madrid, España">
+                </div>
+                <div class="field">
+                    <label>Año de fundación</label>
+                    <input type="text" name="empresa_fundacion" placeholder="Ej: 2018">
+                </div>
             </div>
         </section>
 
         <!-- 02 -->
         <section class="section">
             <div class="section-head"><span class="section-num">02</span><h2>Sector y Tipo de Negocio</h2></div>
-
             <div class="field">
                 <label>¿En qué sector está tu negocio? <span class="req">*</span></label>
-                <p class="hint">Selecciona el que más se acerque.</p>
+                <p class="hint">Selecciona el que más se acerque a tu actividad.</p>
                 <div class="sector-grid">
                     <label class="sector-pill"><input type="radio" name="sector" value="Construccion y Reformas"><span class="icon">🏗️</span>Construcción y Reformas</label>
                     <label class="sector-pill"><input type="radio" name="sector" value="Belleza y Bienestar"><span class="icon">💆</span>Belleza y Bienestar</label>
                     <label class="sector-pill"><input type="radio" name="sector" value="Salud y Clinicas"><span class="icon">🏥</span>Salud y Clínicas</label>
                     <label class="sector-pill"><input type="radio" name="sector" value="Marketing y Agencias"><span class="icon">📣</span>Marketing y Agencias</label>
-                    <label class="sector-pill"><input type="radio" name="sector" value="Hosteleria"><span class="icon">🍽️</span>Hostelería y Restauración</label>
+                    <label class="sector-pill"><input type="radio" name="sector" value="Hosteleria"><span class="icon">🍽️</span>Hostelería</label>
                     <label class="sector-pill"><input type="radio" name="sector" value="Moda y Lifestyle"><span class="icon">👗</span>Moda y Lifestyle</label>
                     <label class="sector-pill"><input type="radio" name="sector" value="Inmobiliaria"><span class="icon">🏠</span>Inmobiliaria</label>
-                    <label class="sector-pill"><input type="radio" name="sector" value="Tecnologia"><span class="icon">💻</span>Tecnología y Software</label>
-                    <label class="sector-pill"><input type="radio" name="sector" value="Educacion"><span class="icon">📚</span>Educación y Formación</label>
+                    <label class="sector-pill"><input type="radio" name="sector" value="Tecnologia"><span class="icon">💻</span>Tecnología</label>
+                    <label class="sector-pill"><input type="radio" name="sector" value="Educacion"><span class="icon">📚</span>Educación</label>
                     <label class="sector-pill"><input type="radio" name="sector" value="Otro"><span class="icon">✳️</span>Otro</label>
                 </div>
             </div>
-
             <div class="field">
                 <label>Describe tu negocio con tus palabras <span class="req">*</span></label>
                 <p class="hint">Qué hacéis, cómo lo hacéis y qué os hace únicos (2–3 párrafos).</p>
-                <textarea name="empresa_descripcion" rows="5" required></textarea>
+                <div class="char-wrap">
+                    <textarea name="empresa_descripcion" rows="5" required id="desc-negocio" maxlength="800"></textarea>
+                    <span class="char-count" id="desc-negocio-count">0/800</span>
+                </div>
             </div>
-
             <div class="field">
                 <label>Tamaño del equipo</label>
                 <div class="select-wrap">
@@ -182,7 +227,6 @@
         <!-- 03 -->
         <section class="section">
             <div class="section-head"><span class="section-num">03</span><h2>Marca y Mensaje</h2></div>
-
             <div class="field">
                 <label>Eslogan o frase principal <span class="req">*</span></label>
                 <p class="hint">Esta frase aparecerá destacada en la portada de la web.</p>
@@ -208,7 +252,6 @@
         <!-- 04 -->
         <section class="section">
             <div class="section-head"><span class="section-num">04</span><h2>Servicios o Productos</h2></div>
-
             <div class="field">
                 <label>Lista tus servicios o productos principales <span class="req">*</span></label>
                 <p class="hint">Escribe cada uno en una línea o separados por comas.</p>
@@ -226,7 +269,6 @@
         <!-- 05 -->
         <section class="section">
             <div class="section-head"><span class="section-num">05</span><h2>Público Objetivo</h2></div>
-
             <div class="field">
                 <label>¿A quién va dirigido tu negocio? <span class="req">*</span></label>
                 <div class="choices">
@@ -251,7 +293,6 @@
         <!-- 06 -->
         <section class="section">
             <div class="section-head"><span class="section-num">06</span><h2>Competencia y Diferenciación</h2></div>
-
             <div class="field">
                 <label>Principales competidores</label>
                 <textarea name="competidores" rows="2" placeholder="Nombres de empresas o enlaces a sus webs..."></textarea>
@@ -266,7 +307,10 @@
         <!-- 07 -->
         <section class="section">
             <div class="section-head"><span class="section-num">07</span><h2>Material Visual y Marca</h2></div>
-
+            <div class="info-card">
+                <span class="ic-icon">💡</span>
+                <p>Cuanto mejor sea el material visual que nos aportes, más rápido y más premium quedará tu web.</p>
+            </div>
             <div class="field">
                 <label>¿Tenéis fotografías para la web? <span class="req">*</span></label>
                 <div class="select-wrap">
@@ -299,7 +343,6 @@
         <!-- 08 -->
         <section class="section">
             <div class="section-head"><span class="section-num">08</span><h2>Funcionalidades de la Web</h2></div>
-
             <div class="field">
                 <label>¿Qué funcionalidades necesitáis?</label>
                 <div class="choices">
@@ -323,7 +366,6 @@
         <!-- 09 -->
         <section class="section">
             <div class="section-head"><span class="section-num">09</span><h2>Timing y Detalles Finales</h2></div>
-
             <div class="field">
                 <label>¿Cuándo necesitáis la web lista? <span class="req">*</span></label>
                 <div class="select-wrap">
@@ -349,21 +391,27 @@
             </div>
             <div class="field">
                 <label>Comentarios adicionales</label>
-                <textarea name="comentarios_finales" rows="4" placeholder="¿Algo más que debamos saber antes de empezar?"></textarea>
+                <div class="char-wrap">
+                    <textarea name="comentarios_finales" rows="4" id="desc-comments" maxlength="600" placeholder="¿Algo más que debamos saber antes de empezar?"></textarea>
+                    <span class="char-count" id="desc-comments-count">0/600</span>
+                </div>
             </div>
         </section>
 
         <div class="submit-section">
             <button type="submit" class="submit-btn">
-                Enviar Brief Completo <span class="arrow">→</span>
+                <span class="dot"></span>
+                Enviar Brief Completo
+                <span class="arrow">→</span>
             </button>
-            <p class="privacy-note">🔒 Tus datos están protegidos y se utilizarán exclusivamente para planificar este proyecto.</p>
+            <p class="privacy-note">🔒 Tus datos están protegidos y se utilizarán exclusivamente para planificar este proyecto.<br><span>Respuesta garantizada en menos de 24 horas.</span></p>
         </div>
 
     </form>
 </div>
 
 <script>
+    // Progress bar
     const fill = document.getElementById('progress-bar-fill');
     const pct  = document.getElementById('progress-pct');
     const form = document.querySelector('form');
@@ -377,12 +425,14 @@
         const p = Math.round((filled.length / required.length) * 100);
         fill.style.width = p + '%';
         pct.textContent  = p + '% completado';
+        pct.style.color  = p === 100 ? 'var(--sage)' : 'var(--gold)';
     }
 
     form.addEventListener('input', updateProgress);
     form.addEventListener('change', updateProgress);
     updateProgress();
 
+    // Sector pills
     document.querySelectorAll('.sector-pill input').forEach(inp => {
         inp.addEventListener('change', () => {
             document.querySelectorAll('.sector-pill').forEach(p => p.classList.remove('selected'));
@@ -390,24 +440,32 @@
         });
     });
 
+    // Choice cards highlight
     document.querySelectorAll('.choice input').forEach(inp => {
         inp.addEventListener('change', () => {
             if (inp.type === 'radio') {
                 document.querySelectorAll(`input[name="${inp.name}"]`).forEach(s => {
-                    s.closest('.choice').style.borderColor = '';
-                    s.closest('.choice').style.background  = '';
+                    s.closest('.choice').classList.remove('active');
                 });
             }
             const card = inp.closest('.choice');
-            if (inp.checked) {
-                card.style.borderColor = 'var(--gold)';
-                card.style.background  = 'var(--gold-dim)';
-            } else {
-                card.style.borderColor = '';
-                card.style.background  = '';
-            }
+            if (inp.checked) card.classList.add('active');
+            else card.classList.remove('active');
         });
     });
+
+    // Char counters
+    function setupCounter(textareaId, countId) {
+        const ta = document.getElementById(textareaId);
+        const ct = document.getElementById(countId);
+        if (!ta || !ct) return;
+        ta.addEventListener('input', () => {
+            ct.textContent = ta.value.length + '/' + ta.maxLength;
+            ct.style.color = ta.value.length > ta.maxLength * 0.85 ? 'var(--gold)' : 'var(--mid)';
+        });
+    }
+    setupCounter('desc-negocio', 'desc-negocio-count');
+    setupCounter('desc-comments', 'desc-comments-count');
 </script>
 </body>
 </html>
