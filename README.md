@@ -54,18 +54,6 @@ Trabajo **1:1** con empresas de reformas, inmobiliarias premium, arquitectura, c
 | ✦ | **Branding & Redes Sociales** | Identidad premium que te posiciona como referente en tu sector |
 | ✉️ | **Automatización con IA** | Secuencias de email y sistemas que venden mientras duermes |
 
----
-
-## 📊 GitHub Stats
-
-<div align="center">
-
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=cmcvtrader&show_icons=true&theme=dark&title_color=F59E0B&icon_color=F59E0B&border_color=333&bg_color=0d1117)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=cmcvtrader&layout=compact&theme=dark&title_color=F59E0B&border_color=333&bg_color=0d1117)
-
-</div>
-
----
 
 ## 🚀 Proyectos Destacados
 
