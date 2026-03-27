@@ -1488,8 +1488,8 @@
     <!-- Global: CRM + Supabase (no defer, must be globally accessible) -->
     <script>
         // ══ CRM MODULE — Supabase Auth ═══════════════════════════════════════════════
-        const SUPA_URL = 'https://lvnnmddprjaettekxvfi.supabase.co';
-        const SUPA_KEY = 'sb_publishable_aD36EjtwfWAKWKQDSt2Yiw_RjgB1urh';
+        const SUPA_URL = 'https://ulgzpjvpmamecsbyyldn.supabase.co';
+        const SUPA_KEY = 'sb_publishable_MWP2a1Kh65mYHCn5C1KWOA_Y4R5Eo7V';
 
         // Lazy-load supabase-js only when CRM panel is first opened
         let _supa = null;
@@ -1539,6 +1539,7 @@
                 btn.textContent = 'Entrar →'; btn.disabled = false;
 
                 if (error) {
+                    console.error('Login error:', error.message);
                     err.style.display = 'block';
                     document.getElementById('crm-pwd-input').style.borderColor = '#ef4444';
                     setTimeout(() => {
@@ -1546,9 +1547,10 @@
                         document.getElementById('crm-pwd-input').style.borderColor = '';
                     }, 3000);
                 } else {
+                    console.log('✅ Login OK');
                     err.style.display = 'none';
                     this._showData();
-                    this.cargar();
+                    await this.cargar();
                 }
             },
 
@@ -1589,7 +1591,11 @@
                     .limit(200);
 
                 if (error) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="crm-empty">Error: ${error.message}</td></tr>`;
+                    console.error('CRM cargar error:', error);
+                    tbody.innerHTML = `<tr><td colspan="5" class="crm-empty" style="color:#ef4444">
+                        ⚠️ Error cargando leads: ${error.message}<br>
+                        <small style="opacity:0.7">Verifica las políticas RLS en Supabase</small>
+                    </td></tr>`;
                     return;
                 }
 
