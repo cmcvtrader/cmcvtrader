@@ -12,8 +12,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
     <style>
         /* ── Variables ── */
@@ -1157,7 +1157,6 @@
         }
 
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 
 <body>
@@ -1485,95 +1484,26 @@
         </div>
     </footer>
 
+    
+    <!-- Global: CRM + Supabase (no defer, must be globally accessible) -->
     <script>
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Hero entrance — use fromTo so start/end states are always explicit
-        gsap.fromTo("#h-ey", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.25, ease: "power3.out" });
-        gsap.fromTo("#h-h1", { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.9, delay: 0.45, ease: "power3.out" });
-        gsap.fromTo("#h-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.65, ease: "power3.out" });
-        gsap.fromTo("#h-btns", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: "power3.out" });
-
-        // Scroll reveals
-        document.querySelectorAll(".gs-fade").forEach(el => {
-            gsap.fromTo(el,
-                { opacity: 0, y: 32 },
-                {
-                    opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
-                    scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" }
-                }
-            );
-        });
-
-        // Counter: 30d
-        ScrollTrigger.create({
-            trigger: "#cnt-30", start: "top 85%", once: true, onEnter: () => {
-                let o = { v: 0 };
-                gsap.to(o, { v: 30, duration: 1.3, ease: "power2.out", onUpdate: () => { document.getElementById("cnt-30").textContent = Math.round(o.v) + "d"; } });
-            }
-        });
-
-        // Counter: 3×
-        ScrollTrigger.create({
-            trigger: "#cnt-3x", start: "top 85%", once: true, onEnter: () => {
-                let o = { v: 0 };
-                gsap.to(o, { v: 3, duration: 1.3, ease: "power2.out", onUpdate: () => { document.getElementById("cnt-3x").textContent = Math.round(o.v) + "×"; } });
-            }
-        });
-
-        // Nav scroll
-        const nav = document.getElementById("navbar");
-        window.addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 50), { passive: true });
-
-        // Magnetic buttons
-        document.querySelectorAll(".btn-primary, .nav-cta").forEach(btn => {
-            btn.addEventListener("mousemove", e => {
-                const r = btn.getBoundingClientRect();
-                gsap.to(btn, { x: (e.clientX - r.left - r.width / 2) * 0.12, y: (e.clientY - r.top - r.height / 2) * 0.12, duration: 0.3 });
-            });
-            btn.addEventListener("mouseleave", () => gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1,0.5)" }));
-        });
-
-        // WA float pulse
-        gsap.to("#wa-float", { scale: 1.06, duration: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
-
-        // Form submit
-        document.getElementById('contactForm').addEventListener('submit', async e => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const orig = btn.innerHTML;
-            btn.innerHTML = '⏳ Enviando...'; btn.disabled = true;
-            const fd = new FormData(e.target);
-            const data = Object.fromEntries(fd);
-            try {
-                // 1️⃣ Guarda en Supabase
-                await _supa.from('leads').insert({
-                    nombre:  data.name    || '',
-                    email:   data.email   || '',
-                    empresa: data.empresa || '',
-                    reto:    data.reto    || ''
-                });
-                // 2️⃣ Notificación email via Formspree
-                await fetch('https://formspree.io/f/mgoljjor', {
-                    method: 'POST', body: fd,
-                    headers: { 'Accept': 'application/json' }
-                });
-                btn.innerHTML = '✅ ¡Recibido! Hablamos pronto';
-                btn.style.background = 'var(--olive)';
-                e.target.reset();
-            } catch {
-                btn.innerHTML = '⚠️ Error, escríbeme por WhatsApp';
-                btn.style.background = '#ef4444';
-            }
-            setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.disabled = false; }, 3500);
-        });
-
         // ══ CRM MODULE — Supabase Auth ═══════════════════════════════════════════════
         const SUPA_URL = 'https://lvnnmddprjaettekxvfi.supabase.co';
         const SUPA_KEY = 'sb_publishable_aD36EjtwfWAKWKQDSt2Yiw_RjgB1urh';
 
-        // Init Supabase client (supabase-js v2)
-        const _supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+        // Lazy-load supabase-js only when CRM panel is first opened
+        let _supa = null;
+        async function getSupaClient() {
+            if (_supa) return _supa;
+            await new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+                s.onload = resolve; s.onerror = reject;
+                document.head.appendChild(s);
+            });
+            _supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+            return _supa;
+        }
 
         const ESTADOS = {
             nuevo:      { label: '🟡 Nuevo',      v: 'nuevo' },
@@ -1586,12 +1516,9 @@
             abrir() {
                 document.getElementById('crm-overlay').classList.add('open');
                 // Check if there's already an active session
-                _supa.auth.getSession().then(({ data }) => {
-                    if (data.session) {
-                        this._showData();
-                        this.cargar();
-                    }
-                });
+                getSupaClient().then(client => client.auth.getSession().then(({ data }) => {
+                    if (data.session) { this._showData(); this.cargar(); }
+                }));
             },
 
             cerrar() {
@@ -1606,7 +1533,8 @@
 
                 btn.textContent = 'Verificando...'; btn.disabled = true;
 
-                const { error } = await _supa.auth.signInWithPassword({ email, password: pwd });
+                const client = await getSupaClient();
+                const { error } = await client.auth.signInWithPassword({ email, password: pwd });
 
                 btn.textContent = 'Entrar →'; btn.disabled = false;
 
@@ -1625,7 +1553,7 @@
             },
 
             async logout() {
-                await _supa.auth.signOut();
+                const cl = await getSupaClient(); await cl.auth.signOut();
                 document.getElementById('crm-data').style.display  = 'none';
                 document.getElementById('crm-login').style.display = 'flex';
                 document.getElementById('crm-email-input').value   = '';
@@ -1653,7 +1581,8 @@
                 const empty = document.getElementById('crm-empty');
                 tbody.innerHTML = '<tr><td colspan="5" class="crm-empty">Cargando...</td></tr>';
 
-                const { data: leads, error } = await _supa
+                const sc = await getSupaClient();
+                const { data: leads, error } = await sc
                     .from('leads')
                     .select('*')
                     .order('created_at', { ascending: false })
@@ -1715,7 +1644,8 @@
                 const id     = sel.dataset.id;
                 const estado = sel.value;
                 sel.setAttribute('data-v', estado);
-                const { error } = await _supa
+                const sc2 = await getSupaClient();
+                const { error } = await sc2
                     .from('leads')
                     .update({ estado })
                     .eq('id', id);
@@ -1734,9 +1664,96 @@
         }
         window.addEventListener('hashchange', checkHash);
         checkHash();
+    </script>
+
+    <!-- Deferred: GSAP animations + form + nav (runs after DOM ready) -->
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero entrance — use fromTo so start/end states are always explicit
+        gsap.fromTo("#h-ey", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.25, ease: "power3.out" });
+        gsap.fromTo("#h-h1", { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.9, delay: 0.45, ease: "power3.out" });
+        gsap.fromTo("#h-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.65, ease: "power3.out" });
+        gsap.fromTo("#h-btns", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: "power3.out" });
+
+        // Scroll reveals
+        document.querySelectorAll(".gs-fade").forEach(el => {
+            gsap.fromTo(el,
+                { opacity: 0, y: 32 },
+                {
+                    opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" }
+                }
+            );
+        });
+
+        // Counter: 30d
+        ScrollTrigger.create({
+            trigger: "#cnt-30", start: "top 85%", once: true, onEnter: () => {
+                let o = { v: 0 };
+                gsap.to(o, { v: 30, duration: 1.3, ease: "power2.out", onUpdate: () => { document.getElementById("cnt-30").textContent = Math.round(o.v) + "d"; } });
             }
         });
+
+        // Counter: 3×
+        ScrollTrigger.create({
+            trigger: "#cnt-3x", start: "top 85%", once: true, onEnter: () => {
+                let o = { v: 0 };
+                gsap.to(o, { v: 3, duration: 1.3, ease: "power2.out", onUpdate: () => { document.getElementById("cnt-3x").textContent = Math.round(o.v) + "×"; } });
+            }
+        });
+
+        // Nav scroll
+        const nav = document.getElementById("navbar");
+        window.addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 50), { passive: true });
+
+        // Magnetic buttons
+        document.querySelectorAll(".btn-primary, .nav-cta").forEach(btn => {
+            btn.addEventListener("mousemove", e => {
+                const r = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - r.left - r.width / 2) * 0.12, y: (e.clientY - r.top - r.height / 2) * 0.12, duration: 0.3 });
+            });
+            btn.addEventListener("mouseleave", () => gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1,0.5)" }));
+        });
+
+        // WA float pulse
+        gsap.to("#wa-float", { scale: 1.06, duration: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+        // Form submit
+        document.getElementById('contactForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...'; btn.disabled = true;
+            const fd = new FormData(e.target);
+            const data = Object.fromEntries(fd);
+            try {
+                // 1️⃣ Guarda en Supabase
+                const supaC = await getSupaClient();
+                await supaC.from('leads').insert({
+                    nombre:  data.name    || '',
+                    email:   data.email   || '',
+                    empresa: data.empresa || '',
+                    reto:    data.reto    || ''
+                });
+                // 2️⃣ Notificación email via Formspree
+                await fetch('https://formspree.io/f/mgoljjor', {
+                    method: 'POST', body: fd,
+                    headers: { 'Accept': 'application/json' }
+                });
+                btn.innerHTML = '✅ ¡Recibido! Hablamos pronto';
+                btn.style.background = 'var(--olive)';
+                e.target.reset();
+            } catch {
+                btn.innerHTML = '⚠️ Error, escríbeme por WhatsApp';
+                btn.style.background = '#ef4444';
+            }
+            setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.disabled = false; }, 3500);
+        });
+        });
     </script>
+
 
     <!-- ══ CRM LEADS PANEL ═══════════════════════════════════════════════════ -->
     <div id="crm-overlay">
