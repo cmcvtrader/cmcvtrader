@@ -2,7 +2,7 @@
 - 👀 I’m interested in ...futbol (real Futbol) / economy 
 - 🌱 I’m currently learning ...programming
 - 💞️ I’m looking to collaboration in the process
-- 📫 How to reach me ...@cmaximiliano on all Networks
+- 📫 How to reach me ...@cmcvtrader on all Networks
 - ⚡ Fun fact: ... 
 
 <!---
