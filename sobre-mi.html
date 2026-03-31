@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre mí | Maximiliano Castillo</title>
+    <meta name="description" content="No soy un marketer de teoría. Soy de ejecución. Conoce mi trayectoria y metodología de trabajo.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+    <style>
+        /* ── Variables de Color ── */
+        :root {
+            --marble-white: #fafaf9;
+            --concrete: #e7e5e4;
+            --gold: #f59e0b;
+            --sage-green: #84cc16;
+            --text-dark: #292524;
+            --pad: clamp(20px, 5vw, 48px);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Outfit', sans-serif; background: var(--marble-white); color: var(--text-dark); overflow-x: hidden; }
+
+        /* Noise overlay */
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 180px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-pad { padding: clamp(60px, 10vw, 120px) var(--pad); }
+        .gs-fade { opacity: 0; transform: translateY(28px); }
+
+        /* ── Navbar ── */
+        #navbar {
+            position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            width: min(860px, calc(100% - 24px)); display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 20px; background: rgba(250, 250, 249, 0.88); backdrop-filter: blur(20px);
+            border: 1px solid var(--concrete); border-radius: 100px; box-shadow: 0 6px 24px rgba(41, 37, 36, 0.06);
+        }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.1rem; color: var(--text-dark); text-decoration: none; }
+        .nav-logo em { color: var(--gold); font-style: italic; }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dark); opacity: 0.65; text-decoration: none; transition: 0.2s; }
+        .nav-links a:hover { color: var(--gold); opacity: 1; }
+        .nav-cta { background: var(--gold); color: white; padding: 10px 24px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-decoration: none; letter-spacing: 0.05em; transition: 0.3s; }
+        .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+
+        /* ── Hero Sobre Mí ── */
+        .hero-bio {
+            min-height: 60svh; display: flex; align-items: center; justify-content: center; text-align: center;
+            padding: 180px var(--pad) 80px; position: relative; overflow: hidden; background: #111;
+        }
+        .hero-bg {
+            position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=85');
+            background-size: cover; background-position: center; opacity: 0.35;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; }
+        .hero-bio h1 {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 700;
+            line-height: 1.1; color: var(--marble-white); margin-bottom: 24px;
+        }
+        .hero-bio h1 em { color: var(--gold); font-style: italic; }
+
+        /* ── Contenido ── */
+        .bio-text { font-size: 1.15rem; line-height: 1.85; color: var(--text-dark); margin-bottom: 32px; font-weight: 300; }
+        .highlight-box { background: white; border: 1px solid var(--concrete); border-radius: 24px; padding: 40px; margin: 48px 0; }
+        .quote-bio { border-left: 4px solid var(--gold); padding: 20px 30px; margin: 40px 0; background: rgba(245, 158, 11, 0.05); font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-style: italic; }
+        
+        .language-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-top: 40px; }
+        .lang-card { background: white; border: 1px solid var(--concrete); padding: 32px; border-radius: 20px; text-align: center; transition: 0.3s; }
+        .lang-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .lang-icon { font-size: 2.5rem; display: block; margin-bottom: 16px; }
+
+        /* ── Formulario ── */
+        .cta-box { background: var(--text-dark); border-radius: 24px; padding: 60px; color: var(--marble-white); position: relative; overflow: hidden; }
+        .cta-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gold); }
+        .form-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; color: white; margin-bottom: 12px; font-family: inherit; }
+        .form-btn { width: 100%; background: var(--gold); color: white; border: none; padding: 18px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .form-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        /* ── Footer ── */
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; padding: 40px var(--pad); border-top: 1px solid var(--concrete); font-size: 0.8rem; }
+        .footer-logo { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; }
+        .footer-logo em { color: var(--gold); font-style: italic; }
+        .social-links { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-bottom: 15px; }
+        .social-link { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--concrete); color: var(--text-dark); opacity: 0.55; transition: all 0.25s; text-decoration: none; }
+        .social-link svg { width: 16px; height: 16px; }
+        .social-link:hover { color: var(--gold); border-color: var(--gold); opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
+        .footer-links { display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; }
+        .footer-links a { color: var(--text-dark); text-decoration: none; font-weight: 500; text-transform: uppercase; font-size: 0.75rem; opacity: 0.6; transition: 0.2s; }
+        .footer-links a:hover { color: var(--gold); opacity: 1; }
+
+        @media (max-width: 768px) { 
+            .nav-links { display: none; }
+            .footer-inner { flex-direction: column; text-align: center; gap: 30px; }
+            .social-links { justify-content: center; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="navbar">
+        <a href="/" class="nav-logo" style="text-decoration: none;">Maximiliano <em>Castillo</em></a>
+        <ul class="nav-links">
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/#especialidad">Especialidad</a></li>
+            <li><a href="/#metodo">Método</a></li>
+            <li><a href="/#exito">Casos de éxito</a></li>
+            <li><a href="/h/">Blog</a></li>
+        </ul>
+        <a href="#contacto" class="nav-cta">Trabajar conmigo →</a>
+    </nav>
+
+    <section class="hero-bio">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="gs-fade">No soy un marketer de teoría.<br>Soy de <em>ejecución.</em></h1>
+        </div>
+    </section>
+
+    <section class="section-pad">
+        <div class="container" style="max-width: 800px;">
+            <div class="gs-fade">
+                <p class="bio-text">Nací en Valencia, Venezuela, y desde temprano entendí que el conocimiento que no se aplica no sirve. Inicié estudiando Mercadeo en el año 2004 en la Universidad José Antonio Páez, pero mi verdadera formación vino fuera del aula: tecnología, software libre, pensamiento crítico y aprendizaje autodidacta constante.</p>
+                
+                <p class="bio-text">Mi carrera dio un giro cuando trabajé en campo con <strong>Diageo</strong>. Ahí aprendí lo que muchos no saben: el marketing real no es diseñar campañas bonitas, es ejecutarlas bajo presión. Exhibiciones, tiempos imposibles, temporadas exigentes… y resultados que no se negocian.</p>
+
+                <p class="bio-text">Después formé parte de la transformación de un negocio tradicional con más de 30 años en el mercado, integrando estrategias digitales sin perder la esencia. Ahí entendí cómo conectar lo clásico con lo moderno: lo que vende hoy.</p>
+            </div>
+
+            <div class="highlight-box gs-fade">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; margin-bottom: 20px;">Marketing digital de alto rendimiento:</h3>
+                <ul style="list-style: none; display: grid; gap: 12px; font-weight: 300;">
+                    <li><strong style="color: var(--gold);">✓</strong> Captación de leads cualificados</li>
+                    <li><strong style="color: var(--gold);">✓</strong> Automatización con CRM</li>
+                    <li><strong style="color: var(--gold);">✓</strong> Estrategias de conversión</li>
+                    <li><strong style="color: var(--gold);">✓</strong> Campañas de Ads orientadas a resultados</li>
+                </ul>
+            </div>
+
+            <div class="gs-fade">
+                <p class="bio-text">No me quedé ahí. Aprendí lenguaje de programación para entender el sistema desde dentro y no depender de terceros.</p>
+                <p class="bio-text">Hoy trabajo en España, vivo junto a la playa y desde la Costa Blanca ayudo a negocios a crecer con algo muy simple, pero poderoso:</p>
+                
+                <div class="quote-bio">"Sistemas que generan clientes y ventas"</div>
+
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; text-align: center; margin: 60px 0 30px;">Hablo el idioma completo del marketing:</h3>
+                
+                <div class="language-grid">
+                    <div class="lang-card">
+                        <span class="lang-icon">🧲</span>
+                        <strong>Sé cómo atraer</strong>
+                        <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">(Tráfico)</p>
+                    </div>
+                    <div class="lang-card">
+                        <span class="lang-icon">⚙️</span>
+                        <strong>Sé cómo convertir</strong>
+                        <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">(Funnels)</p>
+                    </div>
+                    <div class="lang-card">
+                        <span class="lang-icon">🤝</span>
+                        <strong>Sé cómo cerrar</strong>
+                        <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">(Setter & Closer mindset)</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 80px;">
+                    <p style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700;">No vendo humo. <em>Construyo procesos.</em></p>
+                    <p style="opacity: 0.7; margin-top: 10px; font-size: 1.1rem;">Si buscas a alguien que entienda tu negocio y ejecute sin excusas… <strong>soy ese perfil.</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="section-pad">
+        <div class="container">
+            <div class="cta-box gs-fade">
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; margin-bottom: 30px; text-align: center;">¿Hablamos de tu <em>proyecto?</em></h2>
+                <form id="contactForm" style="max-width: 500px; margin: 0 auto;">
+                    <input class="form-input" name="name" type="text" placeholder="Tu nombre" required>
+                    <input class="form-input" name="email" type="email" placeholder="Tu email" required>
+                    <input class="form-input" name="reto" type="text" placeholder="¿En qué te puedo ayudar?" required>
+                    <button class="form-btn" type="submit" id="submitBtn">📩 Solicitar Asesoría Gratuita</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">Maximiliano <em>Castillo</em></div>
+            
+            <div style="text-align: center;">
+                <p style="margin-bottom: 8px; opacity: 0.6;">© 2026 · Activos digitales de alto rendimiento</p>
+                <a href="/#admin" style="color: var(--gold); text-decoration: none; font-size: 0.75rem; font-weight: 700; opacity: 0.2; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.2">CRM Login</a>
+            </div>
+
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:16px;">
+                <div class="social-links">
+                    <a href="https://x.com/cmcvtrader" target="_blank" rel="noopener" class="social-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.26 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                    </a>
+                    <a href="https://www.instagram.com/cmcvtrader" target="_blank" rel="noopener" class="social-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" /></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/cmcvtrader/" target="_blank" rel="noopener" class="social-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
+                    </a>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/#especialidad">Especialidad</a></li>
+                    <li><a href="/#exito">Casos</a></li>
+                    <li><a href="/h/">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+            document.querySelectorAll(".gs-fade").forEach(el => {
+                gsap.fromTo(el, { opacity: 0, y: 30 }, {
+                    opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%" }
+                });
+            });
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '⏳ Enviando...'; btn.disabled = true;
+            const fd = new FormData(e.target);
+            try {
+                await fetch('https://formspree.io/f/mgoljjor', {
+                    method: 'POST', body: fd, headers: { 'Accept': 'application/json' }
+                });
+                btn.innerHTML = '✅ ¡Recibido!';
+                e.target.reset();
+            } catch { btn.innerHTML = '⚠️ Error'; }
+            setTimeout(() => { btn.innerHTML = '📩 Solicitar Asesoría Gratuita'; btn.disabled = false; }, 3000);
+        });
+    </script>
+</body>
+</html>
